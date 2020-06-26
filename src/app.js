@@ -25,7 +25,16 @@ function setupClient(ws) {
   ws.once('message', function incoming(data) {
     console.log('Setup message received: ' + data);
 
-    let setup = JSON.parse(data);
+    let setup
+    try {
+      setup = JSON.parse(data);
+    
+    } catch (error) {
+      console.log('error parse setup message: ' + error);
+      ws.send("Invalid setup message! Bye!");
+      ws.close();
+      return
+    }
     setup.file = basePath + setup.call_id + ".txt"
 
     clients.set(ws, setup)
