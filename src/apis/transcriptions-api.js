@@ -1,7 +1,7 @@
 const fs = require('fs')
 const HttpStatus = require('http-status-codes');
 
-const basePath = `${__dirname}/../transcriptions/`
+const basePath = `${__dirname}/../transcriptions/transcription-`
 
 exports.handle = function (request, response) {
     const file = basePath + request.params.id + '.txt';

@@ -2,7 +2,7 @@ const WebSocket = require('ws');
 const moment = require('moment');
 const fs = require('fs');
 const ApiServer = require('./transcriptions-server');
-const basePath = './transcriptions/'
+const basePath = './transcriptions/transcription-'
 
 ApiServer.start(8081)
 
