@@ -1,12 +1,21 @@
 const WebSocket = require('ws');
 const moment = require('moment');
 const fs = require('fs');
+const https = require('https');
 const ApiServer = require('./transcriptions-server');
 const basePath = './transcriptions/transcription-'
 
 ApiServer.start(8081)
 
-const wss = new WebSocket.Server({ port: 8080 });
+const server = https.createServer({
+  cert: fs.readFileSync('certs/cert.pem'),
+  key: fs.readFileSync('certs/key.pem')
+});
+server.listen(8080)
+const wss = new WebSocket.Server({
+  server: server
+});
+
 const clients = new Map()
 
 function formatMessage(message) {
@@ -28,7 +37,7 @@ function setupClient(ws) {
     let setup
     try {
       setup = JSON.parse(data);
-    
+
     } catch (error) {
       console.log('error parse setup message: ' + error);
       ws.send("Invalid setup message! Bye!");
