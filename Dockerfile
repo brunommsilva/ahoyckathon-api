@@ -7,4 +7,4 @@ WORKDIR /app
 RUN npm install
 RUN npm audit fix
 
-CMD ["node","server.js"]
+CMD ["node","app.js"]

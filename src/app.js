@@ -1,11 +1,20 @@
 const WebSocket = require('ws');
 const moment = require('moment');
 const fs = require('fs');
-
+const ApiServer = require('./transcriptions-server');
 const basePath = './transcriptions/'
+
+ApiServer.start(8081)
 
 const wss = new WebSocket.Server({ port: 8080 });
 const clients = new Map()
+
+function formatMessage(message) {
+  let text = `${message.sender} - [${message.ts}]\n`;
+  text += `${message.text}\n`;
+
+  return text;
+}
 
 function setupClient(ws) {
 
@@ -42,7 +51,8 @@ function setupClient(ws) {
       }
       content = JSON.stringify(message);
       ws.send(content);
-      fs.appendFile(setup.file, content + '\n', function (err) {
+      text = formatMessage(message)
+      fs.appendFile(setup.file, text, function (err) {
         if (err) throw console.log('error writing file: ' + err);
       });
 
@@ -54,12 +64,13 @@ function setupClient(ws) {
       }
 
       content = JSON.stringify(message);
+      text = formatMessage(message)
 
       clients.forEach((setup, client) => {
         if (client != ws) {
           console.log(content);
           client.send(content);
-          fs.appendFile(setup.file, content + '\n', function (err) {
+          fs.appendFile(setup.file, text, function (err) {
             if (err) throw console.log('error writing file: ' + err);
           });
         }
