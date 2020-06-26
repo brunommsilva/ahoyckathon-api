@@ -15,6 +15,7 @@ exports.handle = function (request, response) {
             "exception": "transcription not found"
         });
         response.end();
+        return
     }
 
     response.download(file);
